@@ -25,10 +25,17 @@ Por último denotamos por $x_{ij}$ la variable que vale 1 si el voluntario $v_i$
 
 De esta forma la distancia que se ha recorrido en un día para cubir el servicio es
 
-$\sum_{i=1}\ \sum_{j=1}\ d_{ij}\ x_i\ v_j\ p_{ij}$
+$\sum_{i=1}\ \sum_{j=1}\ d_{ij}\ u_i\ v_j\ x_{ij}$
 
 Con las siguiente restriciones:
-Un voluntario solo puede atender a un usuario
-$\sum_{j=1}\ p_{ij}\ =\ x_i$
-Un usuario que no solicita el servicio no puede recibir un voluntario
-$\sum_{i=1}\ p_{ij}\ =\ u_j$
+* Un voluntario solo puede atender a un usuario
+  $\sum_{j=1}\ x_{ij}\ =\ v_i$
+* Un usuario que no solicita el servicio no puede recibir un voluntario
+  $\sum_{i=1}\ x_{ij}\ =\ u_j$
+* Todas las peticiones tienen que ser atendidas
+  $\sum_{i=1}\ \sum_{j=1}\ x_{ij}\ =\ \sum_{i=1} u_j$
+
+De esta manera la función QUBO a minimizar es
+$f(x)= \sum_{i=1}\ \sum_{j=1}\ d_{ij}\ u_i\ v_j\ x_{ij} + (\sum_{j=1}\ x_{ij}\ -\ v_i)^2 + (\sum_{i=1}\ x_{ij}\ -\ u_j)^2 + (\sum_{i=1}\ \sum_{j=1}\ x_{ij}\ =\ \sum_{i=1} u_j)^2$
+
+Desarrollamos la expresión y obtenemos
