@@ -14,7 +14,7 @@ Quitando la parte del coste fijo y de las dietas que depende del número de usua
 
 El objetivo es encontrar la asignación del personal voluntariado más económica.
 
-## Modelización del problema
+## Modelización QUBO del problema
 Para modelizar el problema como un problema de tipo QUBO, llamamos $u_i$ a cada uno de los usuarios, $v_i$ a cada voluntariado, $d_
 {ij}$ la distancia que recorre el voluntario $v_i$ para llegar a casa del usuario $u_j$.
 
@@ -32,10 +32,13 @@ Con las siguiente restriciones:
   $\sum_{j=1}\ x_{ij}\ =\ v_i$
 * Un usuario que no solicita el servicio no puede recibir un voluntario
   $\sum_{i=1}\ x_{ij}\ =\ u_j$
-* Todas las peticiones tienen que ser atendidas
-  $\sum_{i=1}\ \sum_{j=1}\ x_{ij}\ =\ \sum_{i=1} u_j$
 
 De esta manera la función QUBO a minimizar es
-$f(x)= \sum_{i=1}\ \sum_{j=1}\ d_{ij}\ u_i\ v_j\ x_{ij} + (\sum_{j=1}\ x_{ij}\ -\ v_i)^2 + (\sum_{i=1}\ x_{ij}\ -\ u_j)^2 + (\sum_{i=1}\ \sum_{j=1}\ x_{ij}\ =\ \sum_{i=1} u_j)^2$
+$f(x)= \sum_{i=1}\ \sum_{j=1}\ d_{ij}\ u_i\ v_j\ x_{ij} + (\sum_{j=1}\ x_{ij}\ -\ v_i)^2 + (\sum_{i=1}\ x_{ij}\ -\ u_j)^2$
 
-Desarrollamos la expresión y obtenemos
+Desarrollamos la expresión y apartando los términos constantes obtenemos
+$f(x)= \sum_{i=1}\ \sum_{j=1}\ d_{ij}\ u_i\ v_j\ x_{ij} + \sum_{j=1}\ (1-2v_i) x_{ij} + \sum_{i\neq j}\ x_{ij} x_{ik} + \sum_{j=1}\ (1-2u_i) x_{ij} + \sum_{i\neq j}\ x_{ij} x_{ik}=\sum_{i=1}\ \sum_{j=1}\ (d_{ij}\ u_i\ v_j-2v_i-2u_i) x_{ij} + \sum_{i\neq j}\ 2x_{ij} x_{ik}$
+
+## Modelización ISING del problema
+Una vez obtenida la función a minimizar como una función QUBO, pasarlo a ISING es hacer el cambio de variable $x_{ij}=\frac{1-z_{ij}}{2}$. Por lo tanto
+$f(x)= \sum_{i=1}\ \sum_{j=1}\ (d_{ij}\ u_i\ v_j-2v_i-2u_i) \frac{1-z_{ij}}{2} + \sum_{i\neq j}\ 2 \frac{1-z_{ij}}{2} \frac{1-z_{ik}}{2}=-\sum_{i=1}\ \sum_{j=1}\  \frac{d_{ij}\ u_i\ v_j-2v_i-2u_i-2}{2}z_{ij} + \sum_{i\neq j}\  \frac{z_{ij}z_{ik}}{2}$
